@@ -64,14 +64,21 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } "coc-fzfに必要
-Plug 'antoinemadec/coc-fzf'
 Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
+Plug 'antoinemadec/coc-fzf'
 
 
 " マルチカーソル
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 call plug#end()
+
+"-------------------------
+" coc vim extentions
+"-------------------------
+
+let g:coc_global_extensions = ['coc-eslint', 'coc-explorer', 'coc-fzf-preview', 'coc-html', 'coc-json', 'coc-python', 'coc-sql', 'coc-tabnine', 'coc-tsserver', 'coc-vetur', 'coc-yaml', 'coc-solargraph']
+
 
 "-------------------------
 " プラグイン設定
