@@ -1,0 +1,11 @@
+Include ~/.ssh/github/config
+
+{{- if eq .chezmoi.hostname "kawamataryounoMacBook-Pro" }}
+Include ~/.ssh/acuxserver/config
+Include ~/.ssh/makotoacu/config
+Include ~/.ssh/hattorixserver/config
+Include ~/.ssh/oasis/config
+Include ~/.ssh/conoha_patient_db/config
+Include ~/.ssh/gitlab/config
+Include ~/.ssh/raspi/config
+{{- end }}
