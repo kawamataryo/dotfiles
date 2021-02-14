@@ -71,6 +71,9 @@ Plug 'antoinemadec/coc-fzf'
 " マルチカーソル
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
+" ウィンドウサイズの変更を容易に
+Plug 'camspiers/animate.vim'
+
 call plug#end()
 
 "-------------------------
@@ -95,5 +98,10 @@ let  g:gruvbox_contrast_dark = 'hard'
 nmap <leader>e :CocCommand explorer<CR>
 
 "coc-fzfの起動
-nmap <Space><Space> :CocFzfList<CR>
 nmap <C-o> :CocCommand fzf-preview.ProjectFiles<CR>
+
+"animate.vimのキーバインド windownsサイズの変更
+nnoremap <silent> <Up>    :call animate#window_delta_height(10)<CR>
+nnoremap <silent> <Down>  :call animate#window_delta_height(-10)<CR>
+nnoremap <silent> <Left>  :call animate#window_delta_width(10)<CR>
+nnoremap <silent> <Right> :call animate#window_delta_width(-10)<CR>
