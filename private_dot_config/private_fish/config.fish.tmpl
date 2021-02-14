@@ -1,0 +1,112 @@
+# cd > ls
+function cd
+  builtin cd $argv
+end
+
+# theme
+set -x fish_theme batman
+
+# ---------------------------------------------------------------------
+# plugin設定
+# ---------------------------------------------------------------------
+set -U FZF_LEGACY_KEYBINDINGS 0
+
+# ---------------------------------------------------------------------
+# PATHの追加
+# ---------------------------------------------------------------------
+# neovimの設定
+set -x XDG_CONFIG_HOME $HOME/.config
+
+# brewの設定
+set -x PATH /usr/local/bin $PATH
+
+# 独自binの設定
+set -x PATH $HOME/bin $PATH
+
+# ---------------------------------------------------------------------
+# envの設定
+# ---------------------------------------------------------------------
+# anyenvの設定
+set -x PATH $HOME/.anyenv/bin $PATH
+
+# nodenv
+set -x NODENV_ROOT "$HOME/.anyenv/envs/nodenv"
+set -x PATH $HOME/.anyenv/envs/nodenv/bin $PATH
+set -x PATH $NODENV_ROOT/shims $PATH
+status --is-interactive; and source (nodenv init -|psub)
+
+{{- if eq .chezmoi.hostname "kawamataryounoMacBook-Pro" }}
+
+# pyenv
+set -x PYENV_ROOT "$HOME/.anyenv/envs/pyenv"
+set -x PATH $PATH "$PYENV_ROOT/bin"
+status --is-interactive; and source (pyenv init -|psub)
+
+# rbenv
+set -x RBENV_ROOT "$HOME/.anyenv/envs/rbenv"
+set -x PATH $PATH "$RBENV_ROOT/bin"
+status --is-interactive; and source (rbenv init -|psub)
+
+
+# goenv
+set -x GOENV_ROOT "$HOME/.anyenv/envs/goenv"
+set -x PATH $PATH "$GOENV_ROOT/bin"
+
+set -gx PATH "$GOENV_ROOT/shims" $PATH
+set -gx GOENV_SHELL fish
+source "$GOENV_ROOT/libexec/../completions/goenv.fish"
+command goenv rehash 2>/dev/null
+function goenv
+  set command $argv[1]
+  set -e argv[1]
+
+  switch "$command"
+  case rehash shell
+    source (goenv "sh-$command" $argv|psub)
+  case '*'
+    command goenv "$command" $argv
+  end
+end
+
+# google-cloud-sdk
+source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.fish.inc
+
+# openssl
+set -x LIBRARY_PATH $LIBRARY_PATH "/usr/local/opt/openssl/lib/"
+
+# flutter
+set -x PATH $PATH "$HOME/flutter/bin"
+
+{{- end }}
+
+# Editor
+set -x EDITOR nvim
+
+# shell
+set -x SHELL /usr/local/bin/fish
+
+# ghコマンドの補完
+eval (gh completion -s fish| source)
+
+# ---------------------------------------------------------------------
+# 便利alias
+# ---------------------------------------------------------------------
+
+# fzfの設定
+alias gcf "git branch | fzf | xargs git checkout"
+
+# nvimの設定
+alias vim nvim
+alias vi nvim
+alias v nvim
+
+{{- if eq .chezmoi.hostname "kawamataryounoMacBook-Pro" }}
+
+# githubにリポジトリを作り、ghqで取得、vscodeでひらく
+function ghcr
+ gh repo create $argv
+ ghq get git@github.com:kawamataryo/{$argv[1]}.git
+ code {{ .chezmoi.homedir }}/ghq/github.com/kawamataryo/{$argv[1]}
+end
+
+{{- end }}
