@@ -1,5 +1,5 @@
 # dotfiles
-kawamataryo's dotfiles managed by [chezmoi](https://www.chezmoi.io/) and pass.
+Kawamataryo's dotfiles managed by [chezmoi](https://www.chezmoi.io/).
 
 ## Get started
 
