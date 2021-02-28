@@ -35,12 +35,12 @@ set -x PATH $HOME/.anyenv/envs/nodenv/bin $PATH
 set -x PATH $NODENV_ROOT/shims $PATH
 status --is-interactive; and source (nodenv init -|psub)
 
-{{- if eq .chezmoi.hostname "kawamataryounoMacBook-Pro" }}
-
 # pyenv
 set -x PYENV_ROOT "$HOME/.anyenv/envs/pyenv"
 set -x PATH $PATH "$PYENV_ROOT/bin"
 status --is-interactive; and source (pyenv init -|psub)
+
+{{- if eq .chezmoi.hostname "kawamataryounoMacBook-Pro" }}
 
 # rbenv
 set -x RBENV_ROOT "$HOME/.anyenv/envs/rbenv"
