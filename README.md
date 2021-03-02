@@ -19,10 +19,10 @@ chezmoi init https://github.com/kawamataryo/dotfiles.git
 
 ```
 # On bash
-eval $(op signin my)
+eval $(op my.1password.com メールアドレス)
 
 # On fish with fish-replay
-replay 'eval $(op signin my)'
+replay 'eval $(op my.1password.com メールアドレス)'
 ```
 
 #### 4. Apply dotfiles
