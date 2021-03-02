@@ -45,7 +45,14 @@ noremap k gk
 "leader キーをスペースに
 map <Space> <leader>
 
+"terminalのinsertモードの離脱をescにマッピング
+:tnoremap <Esc> <C-\><C-n>
 
+"terminalを下に別ペインで開く
+command! -nargs=* T split | wincmd j | resize 20 | terminal <args>
+
+"teminalを開いたらinsertモードに
+autocmd TermOpen * startinsert
 
 "-------------------------
 " Vim plugin
