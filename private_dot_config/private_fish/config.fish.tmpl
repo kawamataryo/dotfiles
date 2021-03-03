@@ -40,6 +40,9 @@ set -x PYENV_ROOT "$HOME/.anyenv/envs/pyenv"
 set -x PATH $PATH "$PYENV_ROOT/bin"
 status --is-interactive; and source (pyenv init -|psub)
 
+# direnv
+eval (direnv hook fish)
+
 {{- if eq .chezmoi.hostname "kawamataryounoMacBook-Pro" }}
 
 # rbenv
