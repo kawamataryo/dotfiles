@@ -13,6 +13,7 @@ set hls                "検索した文字をハイライトする
 set smartindent        "改行入力行の末尾にあわせてインデントを増減する
 set ignorecase         "検索時に大文字小文字無視
 set pumheight=10       "補完メニューの高さ
+set mouse=a            "mouseスクロールONに
 
 " 空白文字を可視化
 augroup HighlightTrailingSpaces
@@ -70,10 +71,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " fzf
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } "coc-fzfに必要
-Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
-Plug 'antoinemadec/coc-fzf'
-
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 " マルチカーソル
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -105,7 +103,14 @@ let  g:gruvbox_contrast_dark = 'hard'
 nmap <leader>e :CocCommand explorer<CR>
 
 "coc-fzfの起動
-nmap <C-o> :CocCommand fzf-preview.ProjectFiles<CR>
+nmap <Leader>f [fzf-p]
+xmap <Leader>f [fzf-p]
+nnoremap <silent> [fzf-p]p     :<C-u>CocCommand fzf-preview.FromResources project_mru git<CR>
+nnoremap <silent> [fzf-p]b     :<C-u>CocCommand fzf-preview.Buffers<CR>
+nnoremap <silent> [fzf-p]B     :<C-u>CocCommand fzf-preview.AllBuffers<CR>
+nnoremap <silent> [fzf-p]o     :<C-u>CocCommand fzf-preview.FromResources buffer project_mru<CR>
+nnoremap          [fzf-p]gr    :<C-u>CocCommand fzf-preview.ProjectGrep<Space><CR>
+nnoremap <silent> [fzf-p]l     :<C-u>CocCommand fzf-preview.LocationList<CR>
 
 "animate.vimのキーバインド windownsサイズの変更
 nnoremap <silent> <Up>    :call animate#window_delta_height(10)<CR>
