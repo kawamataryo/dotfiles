@@ -1,0 +1,19 @@
+[push]
+	autoSetupRemote = true
+[core]
+	excludesfile = ~/.gitignore_global
+	editor = nvim
+[user]
+	name = kawamataryo
+	email = ba068082@gmail.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGc4hHRhbNCqLnf5DavzN49p+x7nwb2hN2li+rLzhydJ
+[pull]
+	rebase = false
+[init]
+	defaultBranch = main
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
