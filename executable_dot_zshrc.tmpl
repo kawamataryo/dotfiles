@@ -1,0 +1,143 @@
+# =============================
+#  Basic
+# =============================
+export EDITOR="nvim"
+setopt NONOMATCH
+
+
+# =============================
+#  PATH
+# =============================
+# Antigravity
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+# Project-specific (try)
+export TRY_PATH="$HOME/ghq/github.com/kawamataryo/tries"
+
+
+# =============================
+#  ENV
+# =============================
+# gemini
+export GEMINI_API_KEY={{ onepasswordRead "op://Private/gemini-api-key/credential" }}
+
+# OpenAI
+export OPENAI_API_KEY={{ onepasswordRead "op://Private/openai-api-key/credential" }}
+
+
+# =============================
+#  Tooling init (eval/source)
+# =============================
+# mise
+eval "$("$HOME/.local/bin/mise" activate zsh)"
+
+# direnv
+eval "$(direnv hook zsh)"
+
+# fzf
+source <(fzf --zsh)
+
+# zoxide
+eval "$(zoxide init zsh)"
+zle -N zi
+bindkey '^z' zi
+
+# auto comp
+autoload -Uz compinit
+compinit
+
+# sheldon
+eval "$(sheldon source)"
+
+# starship
+eval "$(starship init zsh)"
+
+# try
+eval "$(ruby "$HOME/.local/try.rb" init)"
+
+
+# =============================
+#  Alias
+# =============================
+alias vi='nvim'
+alias dc='docker compose'
+alias gc='git checkout'
+alias gaa='git add .'
+alias ga='git add'
+alias cat='bat'
+
+alias ni="$HOME/.local/share/mise/installs/node/22.14.0/bin/ni"
+alias nr="$HOME/.local/share/mise/installs/node/22.14.0/bin/nr"
+
+alias pr='claude --dangerously-skip-permissions "/pr-create"'
+
+
+# =============================
+#  Functions / Keybinds
+# =============================
+
+# ghq + fzf: repository jump
+function ghf {
+  local selected_dir_path
+
+  selected_dir_path=$(
+    ghq list | fzf \
+      --preview "ls -laTp \"$(ghq root)/{}\" | tail -n+4 | awk '{print \$9\"/\"\$6\"/\"\$7 \" \" \$10}'"
+  )
+
+  if [[ -n "$selected_dir_path" ]]; then
+    cd "$(ghq root)/$selected_dir_path" || return
+    zle reset-prompt
+  fi
+}
+zle -N ghf
+bindkey '^g' ghf
+
+
+# fzf-history
+function fzf-select-history {
+  history -n  # 未読履歴を取り込む
+
+  local line
+  line=$(
+    fc -ln 1 | fzf --tac --no-sort \
+      --query "$LBUFFER" \
+      --preview 'echo {}' \
+      --preview-window=down,3,wrap
+  ) || return
+
+  BUFFER="$line"
+  CURSOR=$#BUFFER
+  zle reset-prompt
+}
+zle -N fzf-select-history
+bindkey '^r' fzf-select-history
+
+
+# update_master: main/master を自動判定して rebase
+function update_master {
+  local current_branch main_branch
+
+  current_branch=$(git branch --show-current)
+
+  if git show-ref --verify --quiet refs/heads/master; then
+    main_branch="master"
+  elif git show-ref --verify --quiet refs/heads/main; then
+    main_branch="main"
+  else
+    echo "エラー: masterもmainブランチも見つかりません"
+    return 1
+  fi
+
+  git checkout "$main_branch" && \
+  git pull && \
+  git checkout "$current_branch" && \
+  git rebase "$main_branch"
+}
