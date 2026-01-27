@@ -5,43 +5,13 @@ set -eu
 
 BREWFILE="$HOME/Brewfile"
 
-ensure_brew_in_path() {
-  if command -v brew >/dev/null 2>&1; then
-    return 0
-  fi
-  if [ -x /opt/homebrew/bin/brew ]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  elif [ -x /usr/local/bin/brew ]; then
-    eval "$(/usr/local/bin/brew shellenv)"
-  fi
-}
-
-install_homebrew() {
-  echo "Homebrew not found. Installing..."
-
-  # CLT が無いとコケやすいので入れておく（入ってたら何もしない）
-  if command -v xcode-select >/dev/null 2>&1; then
-    if ! xcode-select -p >/dev/null 2>&1; then
-      echo "Installing Xcode Command Line Tools..."
-      xcode-select --install || true
-    fi
-  fi
-
-  NONINTERACTIVE=1 /bin/bash -c \
-    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-}
-
 if [ ! -f "$BREWFILE" ]; then
   echo "Brewfile not found: $BREWFILE"
   exit 1
 fi
 
-ensure_brew_in_path
-
-if ! command -v brew >/dev/null 2>&1; then
-  install_homebrew
-  ensure_brew_in_path
-fi
+# run_once_before で Homebrew インストール済み、PATH に追加
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 brew bundle --file "$BREWFILE"
 
